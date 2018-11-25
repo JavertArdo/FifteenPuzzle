@@ -8,20 +8,23 @@ namespace FifteenPuzzle.Strategy
     {
         private SortedList<int, List<Node>> sorted = new SortedList<int, List<Node>>();
 
-        public void Solve(State initialBoard, State finalBoard, string order)
+        public void Solve(State initialState, State finalState, string order)
         {
             bool found = false;
 
             // Make sure about order
             order = "LRUD";
 
+            // Initial Node
+            Node initialNode = new Node(0, null, initialState, '0', 0);
             // Push Initial Board to Visited States
-            {
-                sorted.Add(0, new List<Node>() { new Node(0, null, initialBoard, '0', 0) });
-                visited++;
-            }
+            sorted.Add(0, new List<Node>() { initialNode });
+
             // Check if Initial Board is Final Board
-            if (Enumerable.SequenceEqual(initialBoard.GetBoard(), finalBoard.GetBoard())) { found = true; }
+            if (Enumerable.SequenceEqual(initialState.GetBoard(), finalState.GetBoard())) { found = true; }
+
+            // Push initial Board to discovered list
+            discovered.Add(initialNode.Puzzle.ToString(), new List<Node>() { initialNode });
 
             // Do until not found solution or visit available states
             while (!found && (sorted.Count > 0))
@@ -30,22 +33,26 @@ namespace FifteenPuzzle.Strategy
                 Node currentNode = sorted.Values[0][0];
                 // Update recursion depth
                 if (recursionDepth < currentNode.Depth) { recursionDepth = currentNode.Depth; }
-                // Push to explored list
-                explored.Add(currentNode);
-                // Remove from sorted list
-                {
-                    sorted.Values[0].RemoveAt(0);
-
-                    if (sorted.Values[0].Count == 0) { sorted.RemoveAt(0); }
-                }
+                
+                // Add one to visited
+                visited++;
 
                 // Check if current Puzzle is Final Board
-                if (Enumerable.SequenceEqual(currentNode.Puzzle.GetBoard(), finalBoard.GetBoard()))
+                if (Enumerable.SequenceEqual(currentNode.Puzzle.GetBoard(), finalState.GetBoard()))
                 {
                     // Find path to solution
                     FindPath(ref solution, currentNode);
 
                     return;
+                }
+
+                // Add one to processed
+                processed++;
+                // Remove from sorted list
+                {
+                    sorted.Values[0].RemoveAt(0);
+
+                    if (sorted.Values[0].Count == 0) { sorted.RemoveAt(0); }
                 }
 
                 // Using heuristic in finding solution - hamm
@@ -61,27 +68,15 @@ namespace FifteenPuzzle.Strategy
                         currentChild.Puzzle.Move(order[i]);
 
                         // Count the cost
-                        currentChild.Cost = H(currentChild.Puzzle, finalBoard, StrategyCode.Manhattan) + currentChild.Depth;
+                        currentChild.Cost = H(currentChild.Puzzle, finalState, StrategyCode.Manhattan) + currentChild.Depth;
 
-                        // Check if Current Child ever existed
-                        bool exists = false;
-                        // On sorted list
-                        foreach (KeyValuePair<int, List<Node>> nodes in sorted)
-                        {
-                            foreach (Node node in nodes.Value)
-                            {
-                                if (Enumerable.SequenceEqual(node.Puzzle.GetBoard(), currentChild.Puzzle.GetBoard()))
-                                {
-                                    exists = true;
-                                }
-                            }
-                        }
-                        // On explored list
-                        if (Contains(explored, currentChild)) { exists = true; }
+                        // Make string from puzzle
+                        string puzzle = currentChild.Puzzle.ToString();
 
                         // Push child node to the sorted list
-                        if (!exists)
+                        if (!discovered.ContainsKey(puzzle))
                         {
+                            // Push to sorted list
                             if (sorted.ContainsKey(currentChild.Cost))
                             {
                                 int index = sorted.IndexOfKey(currentChild.Cost);
@@ -92,6 +87,8 @@ namespace FifteenPuzzle.Strategy
                                 int key = currentChild.Cost;
                                 sorted.Add(key, new List<Node>() { currentChild });
                             }
+                            // Push to hashtable
+                            discovered.Add(puzzle, new List<Node>() { currentChild });
                         }
                     }
                 }

@@ -9,7 +9,9 @@ namespace FifteenPuzzle.Strategy
         protected int recursionDepth = 0;
 
         protected int visited = 0;
-        protected List<Node> explored = new List<Node>();
+        protected int processed = 0;
+
+        protected Dictionary<string, List<Node>> discovered = new Dictionary<string, List<Node>>();
 
         protected List<Node> solution = new List<Node>();
 
@@ -44,7 +46,7 @@ namespace FifteenPuzzle.Strategy
 
         public int GetProcessedStatesCount()
         {
-            return explored.Count;
+            return processed;
         }
 
         // Checking if Node exists in list
