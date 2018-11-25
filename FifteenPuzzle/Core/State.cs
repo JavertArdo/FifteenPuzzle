@@ -241,5 +241,10 @@ namespace FifteenPuzzle.Core
         public int[] GetBoard() { return board; }
 
         public Position GetZeroPosition() { return zero; }
+
+        public override string ToString()
+        {
+            return string.Join(",", board);
+        }
     }
 }

@@ -20,5 +20,10 @@
             this.Move = Move;
             this.Cost = Cost;
         }
+
+        public override string ToString()
+        {
+            return Puzzle.ToString();
+        }
     }
 }
