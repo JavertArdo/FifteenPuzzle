@@ -30,7 +30,7 @@ namespace FifteenPuzzleUnitTest
             State finalState = new State(4, 4);
 
             IStrategy dfs = new DFS();
-            dfs.Solve(initialState, finalState, "RDUL");
+            dfs.Solve(initialState, finalState, "LUDR");
 
             Assert.AreEqual("RRR", ((Strategy)dfs).GetSolution());
         }
