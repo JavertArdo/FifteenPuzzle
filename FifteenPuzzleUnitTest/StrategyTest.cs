@@ -45,6 +45,7 @@ namespace FifteenPuzzleUnitTest
             hamming.Solve(initialState, finalState, "hamm");
 
             Assert.AreEqual("RRR", ((Strategy)hamming).GetSolution());
+            Assert.AreEqual(3, ((Strategy)hamming).GetRecursionDepth());
         }
 
         [TestMethod]
@@ -57,6 +58,7 @@ namespace FifteenPuzzleUnitTest
             manhattan.Solve(initialState, finalState, "manh");
 
             Assert.AreEqual("RRR", ((Strategy)manhattan).GetSolution());
+            Assert.AreEqual(3, ((Strategy)manhattan).GetRecursionDepth());
         }
     }
 }
