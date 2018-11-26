@@ -20,6 +20,9 @@ namespace FifteenPuzzle.Strategy
             // Push Initial Board to Visited States
             sorted.Add(0, new List<Node>() { initialNode });
 
+            // Add one to visited
+            visited++;
+
             // Check if Initial Board is Final Board
             if (Enumerable.SequenceEqual(initialState.GetBoard(), finalState.GetBoard())) { found = true; }
 
@@ -31,21 +34,7 @@ namespace FifteenPuzzle.Strategy
             {
                 // Copy always the first element
                 Node currentNode = sorted.Values[0][0];
-                // Update recursion depth
-                if (recursionDepth < currentNode.Depth) { recursionDepth = currentNode.Depth; }
                 
-                // Add one to visited
-                visited++;
-
-                // Check if current Puzzle is Final Board
-                if (Enumerable.SequenceEqual(currentNode.Puzzle.GetBoard(), finalState.GetBoard()))
-                {
-                    // Find path to solution
-                    FindPath(ref solution, currentNode);
-
-                    return;
-                }
-
                 // Add one to processed
                 processed++;
                 // Remove from sorted list
@@ -76,6 +65,21 @@ namespace FifteenPuzzle.Strategy
                         // Push child node to the sorted list
                         if (!discovered.ContainsKey(puzzle))
                         {
+                            // Update recursion depth
+                            if (recursionDepth < currentChild.Depth) { recursionDepth = currentChild.Depth; }
+
+                            // Add one to visited
+                            visited++;
+
+                            // Check if current Puzzle is Final Board
+                            if (Enumerable.SequenceEqual(currentChild.Puzzle.GetBoard(), finalState.GetBoard()))
+                            {
+                                // Find path to solution
+                                FindPath(ref solution, currentChild);
+
+                                return;
+                            }
+
                             // Push to sorted list
                             if (sorted.ContainsKey(currentChild.Cost))
                             {

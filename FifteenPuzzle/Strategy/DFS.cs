@@ -19,6 +19,9 @@ namespace FifteenPuzzle.Strategy
             // Push Initial Board to Stack
             stack.Push(initialNode);
 
+            // Add one to visited
+            visited++;
+
             // Check if Initial State is Final State
             if (Enumerable.SequenceEqual(initialState.GetBoard(), finalState.GetBoard())) { found = true; }
 
@@ -30,20 +33,6 @@ namespace FifteenPuzzle.Strategy
             {
                 // Copy always the last element
                 Node currentNode = stack.Pop();
-                // Update recursion depth
-                if (recursionDepth < currentNode.Depth) { recursionDepth = currentNode.Depth; }
-                
-                // Add one to visited
-                visited++;
-
-                // Check if current Puzzle is Final Board
-                if (Enumerable.SequenceEqual(currentNode.Puzzle.GetBoard(), finalState.GetBoard()))
-                {
-                    // Find path to solution
-                    FindPath(ref solution, currentNode);
-
-                    return;
-                }
 
                 // Check wheather not achieved max recursion depth on Current Node
                 if (currentNode.Depth < maxRecursionDepth)
@@ -69,6 +58,21 @@ namespace FifteenPuzzle.Strategy
                             // Check if Current Child ever existed on list
                             if (!discovered.ContainsKey(puzzle))
                             {
+                                // Update recursion depth
+                                if (recursionDepth < currentChild.Depth) { recursionDepth = currentChild.Depth; }
+
+                                // Add one to visited
+                                visited++;
+
+                                // Check if current Puzzle is Final Board
+                                if (Enumerable.SequenceEqual(currentChild.Puzzle.GetBoard(), finalState.GetBoard()))
+                                {
+                                    // Find path to solution
+                                    FindPath(ref solution, currentChild);
+
+                                    return;
+                                }
+
                                 // Push to list
                                 stack.Push(currentChild);
                                 // Push to hashtable
