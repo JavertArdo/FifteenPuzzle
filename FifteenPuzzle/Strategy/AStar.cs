@@ -16,15 +16,15 @@ namespace FifteenPuzzle.Strategy
             return node.Cost;
         }
 
-        protected int H(State currentBoard, State finalBoard, StrategyCode code)
+        protected int H(State currentState, State finalState, StrategyCode code)
         {
             int sum = 0;
 
             int width = State.GetWidth();
             int height = State.GetHeight();
 
-            int[] cb = currentBoard.GetBoard();
-            int[] fb = finalBoard.GetBoard();
+            int[] cb = currentState.GetBoard();
+            int[] fb = finalState.GetBoard();
 
             for (int i = 0; i < width * height; i++)
             {
@@ -36,8 +36,8 @@ namespace FifteenPuzzle.Strategy
                     }
                     else if (code == StrategyCode.Manhattan)
                     {
-                        Position cbPosition = currentBoard.FindPosition(cb[i]);
-                        Position fbPosition = finalBoard.FindPosition(cb[i]);
+                        Position cbPosition = currentState.FindPosition(cb[i]);
+                        Position fbPosition = finalState.FindPosition(cb[i]);
 
                         int cRow = cbPosition.x;
                         int cCol = cbPosition.y;
