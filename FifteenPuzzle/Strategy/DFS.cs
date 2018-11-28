@@ -80,10 +80,12 @@ namespace FifteenPuzzle.Strategy
                             }
                             else
                             {
-                                // Check if hash is other than initial state
-                                if (puzzle != initialState.ToString())
+                                if (currentChild.Depth < discovered[puzzle][0].Depth)
                                 {
-                                    // TODO: If achieved board by other move or has other depth
+                                    // Push to list
+                                    stack.Push(currentChild);
+                                    // Push to hashtable
+                                    discovered[puzzle][0] = currentChild;
                                 }
                             }
                         }
